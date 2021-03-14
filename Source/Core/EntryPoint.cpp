@@ -56,7 +56,7 @@ int main()
 			Engine::AttachQueuedScene(*SceneManager::GetScene("Loading"));
 		}
 
-		// run/execute scene
+		// run/execute active scene
 		Engine::ExcuteActiveScene();
 	}
 	
