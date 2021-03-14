@@ -35,7 +35,6 @@ public:
 
 private:
 
-	static RenderWindow*			GlobalWindow;
 	static sf::VideoMode			GlobalVideoMode;
 	static sf::String				GlobalTitle;
 	static sf::Uint32				GlobalStyle;
@@ -43,10 +42,11 @@ private:
 	static unsigned int				GlobalFramerateLimit;
 	static sf::Vector2f				GlobalAspectRatio;
 	static sf::Vector2f				GlobalScale;
+	static RenderWindow*			GlobalWindow;
 
 private:
 
-	static Scene*			ActiveScene;
-	static Scene*			QueuedScene;
+	static Scene* ActiveScene;
+	static Scene* QueuedScene;
 
 };

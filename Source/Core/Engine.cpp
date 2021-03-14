@@ -4,7 +4,6 @@
 
 
 // static declarations (core)
-RenderWindow*			Engine::GlobalWindow;
 sf::VideoMode			Engine::GlobalVideoMode;
 sf::String				Engine::GlobalTitle;
 sf::Uint32				Engine::GlobalStyle;
@@ -12,6 +11,7 @@ sf::ContextSettings		Engine::GlobalContextSettings;
 unsigned int			Engine::GlobalFramerateLimit;
 sf::Vector2f			Engine::GlobalAspectRatio;
 sf::Vector2f			Engine::GlobalScale;
+RenderWindow*			Engine::GlobalWindow;
 
 // static declarations (scenes)
 Scene*	Engine::ActiveScene; 
@@ -34,38 +34,38 @@ void Engine::Initialize(
 	GlobalStyle				= style;
 	GlobalContextSettings	= contextSettings;
 	GlobalFramerateLimit	= framerateLimit;
-	GlobalWindow			= new RenderWindow(GlobalVideoMode, GlobalTitle, GlobalStyle, GlobalContextSettings, GlobalFramerateLimit); // state flags soon
-	GlobalAspectRatio		= AspectRatioCalculator::GetAspectRatio(sf::Vector2f(GlobalWindow->getSize()));
+	GlobalAspectRatio		= AspectRatioCalculator::GetAspectRatio(sf::Vector2f(videoMode.width, videoMode.height));
 	GlobalScale				= sf::Vector2f(1.f, 1.f); // fix later
+	GlobalWindow			= new RenderWindow(GlobalVideoMode, GlobalTitle, GlobalStyle, GlobalContextSettings, GlobalFramerateLimit); // state flags soon
 }
 
 void Engine::Setup(SETUP_FLAG flags)
 {
 	// setup event manager
-	EventManager::AttachWindow(*GlobalWindow);
+	EventManager::AttachGlobalWindow(*GlobalWindow);
 }
 
 void Engine::AttachQueuedScene(Scene& scene)
 {
-	// point/set engine's queued scene to scene parameter reference
+	// point/set engine's "QueuedScene" to scene parameter reference
 	QueuedScene = &scene;
 }
 
 void Engine::AttachActiveScene(Scene& scene)
 {
-	// point/set engine's active scene to scene parameter reference
+	// point/set engine's "ActiveScene" to scene parameter reference
 	ActiveScene = &scene;
 
 	// attach globals to active scene
 	ActiveScene->attachGlobals(
-		*GlobalWindow,
 		GlobalVideoMode,
 		GlobalTitle,
 		GlobalStyle,
 		GlobalContextSettings,
 		GlobalFramerateLimit,
 		GlobalAspectRatio,
-		GlobalScale);
+		GlobalScale,
+		*GlobalWindow);
 }
 
 void Engine::ExcuteActiveScene()
@@ -89,12 +89,14 @@ void Engine::ExcuteActiveScene()
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::ACTIVE)
 		{
-			// update scene
+			// update managers
 			FileManager::Update();
 			DeltaManager::Update();
 			EventManager::Update();
 			StateManager::Update();
 			SceneManager::Update();
+
+			// update scene
 			ActiveScene->update();
 
 			// render scene
@@ -131,7 +133,7 @@ void Engine::ExcuteActiveScene()
 
 void Engine::DetachQueuedScene()
 {
-	// stop pointing at current queued scene reference
+	// stop pointing "QueuedScene" at current queued scene reference
 	QueuedScene = nullptr;
 }
 
@@ -140,14 +142,15 @@ void Engine::DetachActiveScene()
 	// detach globals from active scene
 	ActiveScene->detachGlobals();
 
-	// stop pointing at current active scene reference
+	// stop pointing "ActiveScene" at current active scene reference
 	ActiveScene = nullptr;
 }
 
 void Engine::Exit()
 {
-	// detach window from event manager
-	EventManager::DetachWindow();
+	// manager clean up
+	EventManager::DetachGlobalWindow();
+	SceneManager::Clear();
 
 	// state flags soon
 	delete GlobalWindow;

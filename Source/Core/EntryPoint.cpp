@@ -6,7 +6,7 @@
 	as universal and modular as possible in the future.
 
 	While it's not automated yet, you can see that the 
-	engine can take scenes derived from the semi-abstract Scene 
+	engine can take scenes derived from the semi-abstract "Scene" 
 	base class and executes their overirdden create(), setup(), 
 	update(), render(), and destroy() functions accordingly or
 	as specified in engine source code.

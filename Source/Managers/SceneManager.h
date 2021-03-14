@@ -18,6 +18,7 @@ public:
 	static Scene* GetScene(unsigned int position);
 	static void PushBackScene(Scene* scene, const std::string& ID);
 	static void PopBackScene();
+	static void Clear();
 
 private:
 

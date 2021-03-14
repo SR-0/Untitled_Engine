@@ -14,8 +14,8 @@ public:
 
 public:
 
-	static void AttachWindow(RenderWindow& renderWindow);
-	static void DetachWindow();
+	static void AttachGlobalWindow(RenderWindow& renderWindow);
+	static void DetachGlobalWindow();
 
 public:
 

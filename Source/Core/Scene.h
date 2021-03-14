@@ -11,6 +11,7 @@ class Scene
 public:
 
 	Scene() = default;
+	~Scene() { detachGlobals(); }
 
 public:
 
@@ -32,7 +33,6 @@ public:
 
 public:
 
-	void attachGlobalWindow(RenderWindow& globalWindow)								{ pGlobalWindow				= &globalWindow;			}
 	void attachGlobalVideoMode(sf::VideoMode& globalVideoMode)						{ pGlobalVideoMode			= &globalVideoMode;			}
 	void attachGlobalTitle(sf::String& globalTitle)									{ pGlobalTitle				= &globalTitle;				}
 	void attachGlobalStyle(sf::Uint32& globalStyle)									{ pGlobalStyle				= &globalStyle;				}
@@ -40,20 +40,20 @@ public:
 	void attachGlobalFramerateLimit(unsigned int& globalFramerateLimit)				{ pGlobalFramerateLimit		= &globalFramerateLimit;	}
 	void attachGlobalAspectRatio(sf::Vector2f& globalAspectRatio)					{ pGlobalAspectRatio		= &globalAspectRatio;		}
 	void attachGlobalScale(sf::Vector2f& globalScale)								{ pGlobalScale				= &globalScale;				}
+	void attachGlobalWindow(RenderWindow& globalWindow)								{ pGlobalWindow				= &globalWindow;			}
 
 public:
 
 	void attachGlobals(
-		RenderWindow&			globalWindow,
 		sf::VideoMode&			globalVideoMode,
 		sf::String&				globalTitle,
 		sf::Uint32&				globalStyle,
 		sf::ContextSettings&	globalContextSettings,
 		unsigned int&			globalFramerateLimit,
 		sf::Vector2f&			globalAspectRatio,
-		sf::Vector2f&			globalScale)
+		sf::Vector2f&			globalScale,
+		RenderWindow&			globalWindow)
 	{
-		attachGlobalWindow(globalWindow);
 		attachGlobalVideoMode(globalVideoMode);
 		attachGlobalTitle(globalTitle);
 		attachGlobalStyle(globalStyle);
@@ -61,11 +61,11 @@ public:
 		attachGlobalFramerateLimit(globalFramerateLimit);
 		attachGlobalAspectRatio(globalAspectRatio);
 		attachGlobalScale(globalScale);
+		attachGlobalWindow(globalWindow);
 	}
 
 public:
 
-	void detachWindow()					{ pGlobalWindow				= nullptr;	}
 	void detachGlobalVideoMode()		{ pGlobalVideoMode			= nullptr;	}
 	void detachGlobalTitle()			{ pGlobalTitle				= nullptr;	}
 	void detachGlobalStyle()			{ pGlobalStyle				= nullptr;	}
@@ -73,12 +73,12 @@ public:
 	void detachGlobalFramerateLimit()	{ pGlobalFramerateLimit		= nullptr;	}
 	void detachGlobalAspectRatio()		{ pGlobalAspectRatio		= nullptr;	}
 	void detachGlobalScale()			{ pGlobalScale				= nullptr;	}
+	void detachWindow()					{ pGlobalWindow				= nullptr;	}
 
 public:
 
 	void detachGlobals()
 	{
-		detachWindow();
 		detachGlobalVideoMode();
 		detachGlobalTitle();
 		detachGlobalStyle();
@@ -86,11 +86,11 @@ public:
 		detachGlobalFramerateLimit();
 		detachGlobalAspectRatio();
 		detachGlobalScale();
+		detachWindow();
 	}
 
 public:
 
-	RenderWindow&			getGlobalWindow()			{ return *pGlobalWindow;			}
 	sf::VideoMode&			getGlobalVideoMode()		{ return *pGlobalVideoMode;			}
 	sf::String&				getGlobalTitle()			{ return *pGlobalTitle;				}
 	sf::Uint32&				getGlobalStyle()			{ return *pGlobalStyle;				}
@@ -98,6 +98,7 @@ public:
 	unsigned int&			getGlobalFramerateLimit()	{ return *pGlobalFramerateLimit;	}
 	sf::Vector2f&			getGlobalAspectRatio()		{ return *pGlobalAspectRatio;		}
 	sf::Vector2f&			getGlobalScale()			{ return *pGlobalScale;				}
+	RenderWindow&			getGlobalWindow()			{ return *pGlobalWindow;			}
 
 private:
 
@@ -117,7 +118,6 @@ protected:
 
 public:
 
-	RenderWindow*			pGlobalWindow			= nullptr;
 	sf::VideoMode*			pGlobalVideoMode		= nullptr;
 	sf::String*				pGlobalTitle			= nullptr;
 	sf::Uint32*				pGlobalStyle			= nullptr;
@@ -125,6 +125,7 @@ public:
 	unsigned int*			pGlobalFramerateLimit	= nullptr;
 	sf::Vector2f*			pGlobalAspectRatio		= nullptr;
 	sf::Vector2f*			pGlobalScale			= nullptr;
+	RenderWindow*			pGlobalWindow			= nullptr;
 
 };
 

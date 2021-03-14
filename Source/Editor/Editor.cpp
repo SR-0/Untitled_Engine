@@ -42,10 +42,7 @@ void Editor::setup()
 void Editor::update()
 {
 	updateCore();
-	updateSoundBuffers();
-	updateFonts();
-	updateTextures();
-	updateSounds();
+	updateImGui();
 	updateTexts();
 	updateCircles();
 	updateRectangles();
@@ -58,12 +55,14 @@ void Editor::update()
 
 void Editor::render()
 {
-	renderClear();
+	getGlobalWindow().clear(uiClearColor);
+
 	renderImGui();
 	renderTexts();
 	renderCircles();
 	renderRectangles();
-	renderDisplay();
+
+	getGlobalWindow().display();
 }
 
 void Editor::destroy()
@@ -133,35 +132,41 @@ void Editor::setupCore()
 	uiDarkOrange	= sf::Color(210, 110, 0, 255);
 	uiDarkGrey		= sf::Color(65, 65, 65, 255);
 	uiClearColor	= sf::Color(uiDarkOrange);
-
 }
 
 void Editor::setupSoundBuffers()
 {
+	//
 }
 
 void Editor::setupFonts()
 {
+	//
 }
 
 void Editor::setupTextures()
 {
+	//
 }
 
 void Editor::setupSounds()
 {
+	//
 }
 
 void Editor::setupTexts()
 {
+	//
 }
 
 void Editor::setupCircles()
 {
+	//
 }
 
 void Editor::setupRectangles()
-{\
+{
+	//
 }
 
 #pragma endregion
@@ -174,10 +179,14 @@ void Editor::setupRectangles()
 
 void Editor::updateCore()
 {
+	//
+}
+
+void Editor::updateImGui()
+{
 	static char tempWindowTitle[]			= "change window title here...";
 	static float tempUiClearColor[3]		= { float(uiClearColor.r), float(uiClearColor.g), float(uiClearColor.b) };
 	static const sf::Vector2f resolution	= sf::Vector2f(getGlobalWindow().getSize());
-
 
 
 	ImGui::SFML::Update(getGlobalWindow(), DeltaManager::Restart);
@@ -244,32 +253,19 @@ void Editor::updateCore()
 	/* END */
 }
 
-void Editor::updateSoundBuffers()
-{
-}
-
-void Editor::updateFonts()
-{
-}
-
-void Editor::updateTextures()
-{
-}
-
-void Editor::updateSounds()
-{
-}
-
 void Editor::updateTexts()
 {
+	//
 }
 
 void Editor::updateCircles()
 {
+	//
 }
 
 void Editor::updateRectangles()
 {
+	//
 }
 
 #pragma endregion
@@ -278,12 +274,7 @@ void Editor::updateRectangles()
 
 
 
-#pragma region RENDER 
-
-void Editor::renderClear()
-{
-	getGlobalWindow().clear(uiClearColor);
-}
+#pragma region RENDER
 
 void Editor::renderImGui()
 {
@@ -292,19 +283,17 @@ void Editor::renderImGui()
 
 void Editor::renderTexts()
 {
+	//
 }
 
 void Editor::renderCircles()
 {
+	//
 }
 
 void Editor::renderRectangles()
 {
-}
-
-void Editor::renderDisplay()
-{
-	getGlobalWindow().display();
+	//
 }
 
 #pragma endregion
@@ -317,34 +306,42 @@ void Editor::renderDisplay()
 
 void Editor::destroyCore()
 {
+	//
 }
 
 void Editor::destroySoundBuffers()
 {
+	//
 }
 
 void Editor::destroyFonts()
 {
+	//
 }
 
 void Editor::destroyTextures()
 {
+	//
 }
 
 void Editor::destroySounds()
 {
+	//
 }
 
 void Editor::destroyTexts()
 {
+	//
 }
 
 void Editor::destroyCircles()
 {
+	//
 }
 
 void Editor::destroyRectangles()
 {
+	//
 }
 
 #pragma endregion

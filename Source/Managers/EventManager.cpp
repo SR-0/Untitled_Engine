@@ -61,13 +61,13 @@ void EventManager::Update()
 	}
 }
 
-void EventManager::AttachWindow(RenderWindow& renderWindow)
+void EventManager::AttachGlobalWindow(RenderWindow& renderWindow)
 {
 	window = &renderWindow;
 	ImGui::SFML::Init(*window);
 }
 
-void EventManager::DetachWindow()
+void EventManager::DetachGlobalWindow()
 {
 	ImGui::SFML::Shutdown();
 	window = nullptr;

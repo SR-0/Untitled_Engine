@@ -45,3 +45,11 @@ void SceneManager::PopBackScene()
 	Scenes.pop_back();
 	SceneIDs.pop_back();
 }
+
+void SceneManager::Clear()
+{
+	for (auto i = 0; i < Scenes.size(); i++)
+	{
+		delete Scenes[i];
+	}
+}

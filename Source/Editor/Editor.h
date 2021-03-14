@@ -37,22 +37,17 @@ public:
 public:
 
 	void updateCore();
-	void updateSoundBuffers();
-	void updateFonts();
-	void updateTextures();
-	void updateSounds();
+	void updateImGui();
 	void updateTexts();
 	void updateCircles();
 	void updateRectangles();
 
 public:
 
-	void renderClear();
 	void renderImGui();
 	void renderTexts();
 	void renderCircles();
 	void renderRectangles();
-	void renderDisplay();
 
 public:
 
