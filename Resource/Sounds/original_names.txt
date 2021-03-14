@@ -1,0 +1,6 @@
+/*
+
+(get all new sounds soon to avoid any headaches)
+ok.wav = inpact_soft_heavy_001.wav
+
+*/
