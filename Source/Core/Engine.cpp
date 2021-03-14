@@ -35,17 +35,13 @@ void Engine::Initialize(
 	GlobalContextSettings	= contextSettings;
 	GlobalFramerateLimit	= framerateLimit;
 	GlobalWindow			= new RenderWindow(GlobalVideoMode, GlobalTitle, GlobalStyle, GlobalContextSettings, GlobalFramerateLimit); // state flags soon
+	GlobalAspectRatio		= AspectRatioCalculator::GetAspectRatio(sf::Vector2f(GlobalWindow->getSize()));
+	GlobalScale				= sf::Vector2f(1.f, 1.f); // fix later
 }
 
 void Engine::Setup(SETUP_FLAG flags)
 {
-	// initialize global aspect ratio
-	GlobalAspectRatio = AspectRatioCalculator::GetAspectRatio(sf::Vector2f(GlobalWindow->getSize()));
-
-	// initialize global scale
-	GlobalScale = sf::Vector2f(1.f, 1.f);
-
-	// initialize event manager
+	// setup event manager
 	EventManager::AttachWindow(*GlobalWindow);
 }
 
@@ -53,17 +49,6 @@ void Engine::AttachQueuedScene(Scene& scene)
 {
 	// point/set engine's queued scene to scene parameter reference
 	QueuedScene = &scene;
-
-	// attach window to queued scene
-	QueuedScene->attachGlobals(
-		*GlobalWindow,
-		GlobalVideoMode,
-		GlobalTitle,
-		GlobalStyle,
-		GlobalContextSettings,
-		GlobalFramerateLimit,
-		GlobalAspectRatio,
-		GlobalScale);
 }
 
 void Engine::AttachActiveScene(Scene& scene)
@@ -71,7 +56,7 @@ void Engine::AttachActiveScene(Scene& scene)
 	// point/set engine's active scene to scene parameter reference
 	ActiveScene = &scene;
 
-	// attach window to active scene
+	// attach globals to active scene
 	ActiveScene->attachGlobals(
 		*GlobalWindow,
 		GlobalVideoMode,
@@ -85,7 +70,7 @@ void Engine::AttachActiveScene(Scene& scene)
 
 void Engine::ExcuteActiveScene()
 {
-	if (ActiveScene != nullptr)
+	if (ActiveScene != nullptr) // if there is an active scene attached to engine
 	{
 		if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::CREATE)
 		{
@@ -104,13 +89,12 @@ void Engine::ExcuteActiveScene()
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::ACTIVE)
 		{
-			// core update
+			// update scene
 			FileManager::Update();
 			DeltaManager::Update();
 			EventManager::Update();
 			StateManager::Update();
-
-			// update scene
+			SceneManager::Update();
 			ActiveScene->update();
 
 			// render scene
@@ -128,7 +112,7 @@ void Engine::ExcuteActiveScene()
 			ExcuteActiveScene();
 		}
 	}
-	else if (QueuedScene != nullptr)
+	else if (QueuedScene != nullptr) // if there is a queued scene attached to engine
 	{
 		// point active scene to queued scene
 		AttachActiveScene(*QueuedScene);

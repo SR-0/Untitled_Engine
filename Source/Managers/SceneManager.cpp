@@ -3,6 +3,11 @@
 std::vector<Scene*>			SceneManager::Scenes;
 std::vector<std::string>	SceneManager::SceneIDs;
 
+void SceneManager::Update()
+{
+	// TO DO
+}
+
 Scene* SceneManager::GetScene(const std::string& ID)
 {
 	bool found = false;

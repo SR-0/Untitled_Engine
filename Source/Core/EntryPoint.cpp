@@ -31,7 +31,7 @@ int main()
 	// create default scene and store it with SceneManager (position 0)
 	SceneManager::PushBackScene(new SceneLoading(),	"Loading");
 
-	// creates main menu (or whatever) scene and store it with SceneManager (position 1)
+	// creates Editor (or whatever) scene and store it with SceneManager (position 1)
 	SceneManager::PushBackScene(new Editor(), "Editor");
 
 	// Engine initialized window video mode, title, style, and context setttings

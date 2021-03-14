@@ -10,6 +10,10 @@ private:
 
 public:
 
+	static void Update();
+
+public:
+
 	static Scene* GetScene(const std::string& ID);
 	static Scene* GetScene(unsigned int position);
 	static void PushBackScene(Scene* scene, const std::string& ID);

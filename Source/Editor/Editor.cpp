@@ -119,6 +119,7 @@ void Editor::createCircles()
 void Editor::createRectangles()
 {
 }
+
 #pragma endregion
 
 
@@ -160,8 +161,7 @@ void Editor::setupCircles()
 }
 
 void Editor::setupRectangles()
-{
-	getGlobalTitle().toAnsiString();
+{\
 }
 
 #pragma endregion
@@ -178,13 +178,16 @@ void Editor::updateCore()
 	static float tempUiClearColor[3]		= { float(uiClearColor.r), float(uiClearColor.g), float(uiClearColor.b) };
 	static const sf::Vector2f resolution	= sf::Vector2f(getGlobalWindow().getSize());
 
+
+
 	ImGui::SFML::Update(getGlobalWindow(), DeltaManager::Restart);
 
-	// BEGIN
+
+
+	/* BEGIN */
 	//ImGui::Begin("Toolbar", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
 	//ImGui::Begin("Toolbar", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar);
 	ImGui::Begin("Toolbar", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove);
-
 
 	ImGui::SameLine();	if (ImGui::Button("OPTIONS",		ImVec2(resolution.x / 16, resolution.y / 40)) ) {}
 	ImGui::SameLine();	if ( ImGui::Button("OPTIONS",		ImVec2(resolution.x / 16, resolution.y / 40)) )	{}
@@ -196,9 +199,11 @@ void Editor::updateCore()
 	ImGui::SameLine();	if ( ImGui::Button("HELP",			ImVec2(resolution.x / 16, resolution.y / 40)) )	{}
 
 	ImGui::End();
-	// END
+	/* END */
 
-	// BEGIN
+
+
+	/* BEGIN */
 	//ImGui::Begin("MinMaxClose", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
 	//ImGui::Begin("MinMaxClose", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar);
 	ImGui::Begin("MinMaxClose", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize);
@@ -209,9 +214,11 @@ void Editor::updateCore()
 	ImGui::SameLine();	if (ImGui::Button("X",	ImVec2(resolution.x / 40, resolution.y / 40)))	{ getGlobalWindow().close(); }
 
 	ImGui::End();
-	// END
+	/* END */
 
-	// BEGIN
+
+
+	/* BEGIN */
 	ImGui::Begin("Window Editor");
 
 	if (ImGui::ColorEdit3("Clear Color", tempUiClearColor))
@@ -234,7 +241,7 @@ void Editor::updateCore()
 	}
 
 	ImGui::End();
-	// END
+	/* END */
 }
 
 void Editor::updateSoundBuffers()

@@ -2,7 +2,7 @@
 
 #include "Core/Scene.h";
 
-class Editor : public Scene
+class Editor : public Scene // for now editor will just be a derived scene
 {
 public:
 

@@ -165,7 +165,6 @@
   <ItemGroup>
     <ClCompile Include="Includes\ImGui-SFML\imgui-SFML.cpp" />
     <ClCompile Include="Includes\ImGui\imgui.cpp" />
-    <ClCompile Include="Includes\ImGui\imgui_demo.cpp" />
     <ClCompile Include="Includes\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Includes\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Includes\ImGui\imgui_widgets.cpp" />
@@ -223,20 +222,7 @@
     <ClInclude Include="Source\Managers\StateManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Includes\ImGui-SFML\.appveyor.yml" />
-    <None Include="Includes\ImGui-SFML\.clang-format" />
-    <None Include="Includes\ImGui-SFML\.gitignore" />
-    <None Include="Includes\ImGui-SFML\.travis.yml" />
-    <None Include="Includes\ImGui-SFML\conanfile.py" />
-    <None Include="Includes\ImGui-SFML\LICENSE" />
-    <None Include="Includes\ImGui-SFML\README.md" />
-    <None Include="Includes\ImGui\.editorconfig" />
-    <None Include="Includes\ImGui\.gitattributes" />
-    <None Include="Includes\ImGui\.gitignore" />
-  </ItemGroup>
-  <ItemGroup>
     <Text Include="Includes\ImGui-SFML\CMakeLists.txt" />
-    <Text Include="Includes\ImGui\LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
