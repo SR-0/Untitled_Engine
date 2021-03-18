@@ -260,6 +260,7 @@ void Editor::updateImGui()
 	/* BEGIN */
 	ImGui::Begin("Sprite Viewer", (bool*)true);
 
+	ImGui::
 	ImGui::Image(textures[1]);
 
 	std::string size = "original size: "
