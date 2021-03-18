@@ -8,12 +8,6 @@
 
 RenderWindow*	EventManager::window;
 
-//sf::String		windowTitle;
-//float			uiUniversalScale;
-//float			uiBorderScale;
-//float			uiTextScale;
-//sf::Color		uiColor;
-
 void EventManager::Update()
 {
 	if (window != nullptr)

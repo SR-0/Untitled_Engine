@@ -25,6 +25,7 @@ public:
 
 	const char*		getId()					{ return id;				}
 	unsigned int	getRenderLayerCount()	{ return renderLayerCount;	}
+	ImGuiIO			getIO()					{ return IO;				}
 
 public:
 
@@ -104,6 +105,7 @@ private:
 
 	const char*		id					= nullptr;
 	unsigned int	renderLayerCount	= 1;
+	ImGuiIO			IO					= ImGuiIO();
 
 protected:
 
@@ -115,6 +117,7 @@ protected:
 	std::vector<Texture>		textures;
 	std::vector<CircleShape>	circles;
 	std::vector<RectangleShape>	rectangles;		
+	std::vector<Sprite>			sprites;
 
 public:
 

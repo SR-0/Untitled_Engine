@@ -62,7 +62,7 @@ void SceneLoading::render()
 	// clear frame
 	getGlobalWindow().clear();
 	
-	// draw frame
+	// draw frame layer by layer
 	for (auto renderLayer = 1; renderLayer <= getRenderLayerCount(); renderLayer++)
 	{
 		// draw all rectangles on this layer

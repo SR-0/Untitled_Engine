@@ -22,6 +22,7 @@ public:
 	void createTexts();
 	void createCircles();
 	void createRectangles();
+	void createSprites();
 
 public:
 
@@ -33,6 +34,7 @@ public:
 	void setupTexts();
 	void setupCircles();
 	void setupRectangles();
+	void setupSprites();
 
 public:
 
@@ -41,13 +43,15 @@ public:
 	void updateTexts();
 	void updateCircles();
 	void updateRectangles();
+	void updateSprites();
 
 public:
 
 	void renderImGui();
-	void renderTexts();
-	void renderCircles();
-	void renderRectangles();
+	void renderTexts(unsigned int renderLayer);
+	void renderCircles(unsigned int renderLayer);
+	void renderRectangles(unsigned int renderLayer);
+	void renderSprites(unsigned int renderLayer);
 
 public:
 
@@ -59,16 +63,26 @@ public:
 	void destroyTexts();
 	void destroyCircles();
 	void destroyRectangles();
-
+	void destroySprites();
+	
 public:
 
-	Scene*			editorScene;
 	float			uiUniversalScale;
 	float			uiBorderScale;
 	float			uiTextScale;
 	sf::Color		uiDarkOrange;
 	sf::Color		uiDarkGrey;
 	sf::Color		uiClearColor;
+	sf::Vector2f	resolution;
 
+	unsigned int	tempSpriteArrayPosition;
+	float			tempSpriteOrigin[2];
+	float			tempSpriteScale[2];
+	float			tempSpritePosition[2];
+	float			tempSpriteColor[3];
+	float			tempSpriteOpacity;
+	float			tempSpriteRotation;
+	bool			tempSpriteRenderEnabled;
+	unsigned int	tempSpriteRenderLayer;		
 };
 
