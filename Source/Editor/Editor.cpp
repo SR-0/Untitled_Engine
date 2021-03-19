@@ -97,8 +97,8 @@ void Editor::createFonts()
 
 void Editor::createTextures()
 {
-	textures.push_back(Texture()); // 0 - 1280x720 resolution background texture
-	textures.push_back(Texture()); // 1 - cyan guy texture
+	pushTexture("background_1280x720"); // 0 - 1280x720 resolution background texture
+	pushTexture("cyan_guy_stand");		// 1 - cyan guy texture
 }
 
 void Editor::createSounds()
@@ -115,12 +115,12 @@ void Editor::createCircles()
 
 void Editor::createRectangles()
 {
-	rectangles.push_back(RectangleShape()); // 0 - 1280x720 resolution background rectangle
+	pushRectangle("background"); // 0 - 1280x720 resolution background rectangle
 }
 
 void Editor::createSprites()
 {
-	sprites.push_back(Sprite()); // 0 - test ImGui sprite
+	pushSprite("cyan_guy"); // 0 - test ImGui sprite
 }
 
 #pragma endregion
@@ -161,8 +161,8 @@ void Editor::setupFonts()
 
 void Editor::setupTextures()
 {
-	textures[0].loadFromFile("Resource/Textures/background_1280x720.png");
-	textures[1].loadFromFile("Resource/Textures/cyan_guy_stand.png");
+	getTexture("background_1280x720").loadFromFile(	"Resource/Textures/background_1280x720.png"	);
+	getTexture("cyan_guy_stand").loadFromFile(		"Resource/Textures/cyan_guy_stand.png"		);
 }
 
 void Editor::setupSounds()
@@ -183,39 +183,39 @@ void Editor::setupCircles()
 void Editor::setupRectangles()
 {
 	// setup background reference image (rectangles[0])
-	rectangles[0].setSize(textures[0].getSize().x, textures[0].getSize().y);
-	rectangles[0].setTexture(&textures[0]);
-	rectangles[0].setOrigin(0, 0);
-	rectangles[0].setPosition(0, 0);
-	rectangles[0].setScale(getGlobalScale());
-	rectangles[0].setRenderEnabled(true);
-	rectangles[0].setRenderLayer(1);
+	getRectangle(0).setSize(getTexture(0).getSize().x, getTexture(0).getSize().y);
+	getRectangle(0).setTexture(&getTexture(0));
+	getRectangle(0).setOrigin(0, 0);
+	getRectangle(0).setPosition(0, 0);
+	getRectangle(0).setScale(getGlobalScale());
+	getRectangle(0).setRenderEnabled(true);
+	getRectangle(0).setRenderLayer(1);
 }
 
 void Editor::setupSprites()
 {
 	// setup cyan guy image (rectangles[0])
-	sprites[0].setTexture(textures[1]);
-	sprites[0].setPosition(getGlobalWindow().getSize().x / 2.f, getGlobalWindow().getSize().y / 2.f);
-	sprites[0].setOrigin(sprites[0].getTexture()->getSize().x / 2.f, sprites[0].getTexture()->getSize().y / 2.f);
-	sprites[0].setRenderEnabled(true);
-	sprites[0].setRenderLayer(2);
+	getSprite(0).setTexture(getTexture(1));
+	getSprite(0).setPosition(getGlobalWindow().getSize().x / 2.f, getGlobalWindow().getSize().y / 2.f);
+	getSprite(0).setOrigin(getSprite(0).getTexture()->getSize().x / 2.f, getSprite(0).getTexture()->getSize().y / 2.f);
+	getSprite(0).setRenderEnabled(true);
+	getSprite(0).setRenderLayer(2);
 
 	// temp sprite for ImGui
 	tempSpriteArrayPosition		= 0;
-	tempSpriteOrigin[0]			= sprites[0].getOrigin().x;
-	tempSpriteOrigin[1]			= sprites[0].getOrigin().y;
-	tempSpriteScale[0]			= sprites[0].getScale().x;
-	tempSpriteScale[1]			= sprites[0].getScale().y;
-	tempSpritePosition[0]		= sprites[0].getPosition().x;
-	tempSpritePosition[1]		= sprites[0].getPosition().y;
-	tempSpriteColor[0]			= (float)sprites[0].getColor().r / 255;
-	tempSpriteColor[1]			= (float)sprites[0].getColor().g / 255;
-	tempSpriteColor[2]			= (float)sprites[0].getColor().b / 255;
-	tempSpriteOpacity			= sprites[0].getColor().a / 255;
-	tempSpriteRotation			= sprites[0].getRotation();
-	tempSpriteRenderEnabled		= sprites[0].isRenderEnabled();
-	tempSpriteRenderLayer		= sprites[0].getRenderLayer();
+	tempSpriteOrigin[0]			= getSprite(0).getOrigin().x;
+	tempSpriteOrigin[1]			= getSprite(0).getOrigin().y;
+	tempSpriteScale[0]			= getSprite(0).getScale().x;
+	tempSpriteScale[1]			= getSprite(0).getScale().y;
+	tempSpritePosition[0]		= getSprite(0).getPosition().x;
+	tempSpritePosition[1]		= getSprite(0).getPosition().y;
+	tempSpriteColor[0]			= getSprite(0).getColor().r / 255.f;
+	tempSpriteColor[1]			= getSprite(0).getColor().g / 255.f;
+	tempSpriteColor[2]			= getSprite(0).getColor().b / 255.f;
+	tempSpriteOpacity			= getSprite(0).getColor().a / 255.f;
+	tempSpriteRotation			= getSprite(0).getRotation();
+	tempSpriteRenderEnabled		= getSprite(0).isRenderEnabled();
+	tempSpriteRenderLayer		= getSprite(0).getRenderLayer();
 }
 
 #pragma endregion
@@ -233,6 +233,8 @@ void Editor::updateCore()
 
 void Editor::updateImGui()
 {
+	Sprite* tempSprite = &getSprite(tempSpriteArrayPosition);
+
 	ImGui::SFML::Update(getGlobalWindow(), DeltaManager::Restart);
 
 
@@ -260,110 +262,110 @@ void Editor::updateImGui()
 	/* BEGIN */
 	ImGui::Begin("Sprite Viewer", (bool*)true);
 
-	ImGui::Image(textures[1]);
+	ImGui::Image(getTexture("cyan_guy_stand"));
 
 	std::string size = "original size: "
-		+ std::to_string(int(sprites[tempSpriteArrayPosition].getTexture()->getSize().x)) + "x"
-		+ std::to_string(int(sprites[tempSpriteArrayPosition].getTexture()->getSize().y));
+		+ std::to_string(int(tempSprite->getTexture()->getSize().x)) + "x"
+		+ std::to_string(int(tempSprite->getTexture()->getSize().y));
 
 	ImGui::Text(size.c_str());
 
 	std::string scaledSize = "scaled size: "
-		+ std::to_string(int( (sprites[tempSpriteArrayPosition].getTexture()->getSize().x) * sprites[tempSpriteArrayPosition].getScale().x) ) + "x"
-		+ std::to_string(int( (sprites[tempSpriteArrayPosition].getTexture()->getSize().y) * sprites[tempSpriteArrayPosition].getScale().y) );
+		+ std::to_string(int( (tempSprite->getTexture()->getSize().x) * tempSprite->getScale().x) ) + "x"
+		+ std::to_string(int( (tempSprite->getTexture()->getSize().y) * tempSprite->getScale().y) );
 
 	ImGui::Text(scaledSize.c_str());
 
 
 	if (ImGui::InputFloat2("origin", (float*)&tempSpriteOrigin))
 	{
-		if (sprites[tempSpriteArrayPosition].getOrigin().x != tempSpriteOrigin[0])
+		if (tempSprite->getOrigin().x != tempSpriteOrigin[0])
 		{
-			sprites[tempSpriteArrayPosition].setOrigin(tempSpriteOrigin[0], sprites[tempSpriteArrayPosition].getOrigin().y);
+			tempSprite->setOrigin(tempSpriteOrigin[0], tempSprite->getOrigin().y);
 		}
 
-		if (sprites[tempSpriteArrayPosition].getOrigin().y != tempSpriteOrigin[1])
+		if (tempSprite->getOrigin().y != tempSpriteOrigin[1])
 		{
-			sprites[tempSpriteArrayPosition].setOrigin(sprites[tempSpriteArrayPosition].getOrigin().x, tempSpriteOrigin[1]);
+			tempSprite->setOrigin(tempSprite->getOrigin().x, tempSpriteOrigin[1]);
 		}
 	}
 
 	if (ImGui::InputFloat2("scale", (float*)&tempSpriteScale))
 	{
-		if (sprites[tempSpriteArrayPosition].getScale().x != tempSpriteScale[0])
+		if (tempSprite->getScale().x != tempSpriteScale[0])
 		{
-			sprites[tempSpriteArrayPosition].setScale(tempSpriteScale[0], sprites[tempSpriteArrayPosition].getScale().y);
+			tempSprite->setScale(tempSpriteScale[0], tempSprite->getScale().y);
 		}
 
-		if (sprites[tempSpriteArrayPosition].getScale().y != tempSpriteScale[1])
+		if (tempSprite->getScale().y != tempSpriteScale[1])
 		{
-			sprites[tempSpriteArrayPosition].setScale(sprites[tempSpriteArrayPosition].getScale().x, tempSpriteScale[1]);
+			tempSprite->setScale(tempSprite->getScale().x, tempSpriteScale[1]);
 		}
 	}
 
 
 	if (ImGui::InputFloat2("position", (float*)&tempSpritePosition))
 	{
-			sprites[tempSpriteArrayPosition].setPosition(
-				tempSpritePosition[0] / sprites[tempSpriteArrayPosition].getScale().x, 
-				tempSpritePosition[1] / sprites[tempSpriteArrayPosition].getScale().y);
+		tempSprite->setPosition(
+				tempSpritePosition[0] /tempSprite->getScale().x, 
+				tempSpritePosition[1] /tempSprite->getScale().y);
 	}
 
 	if (ImGui::ColorEdit3("color", (float*)&tempSpriteColor))
 	{
-		if (sprites[tempSpriteArrayPosition].getColor() != sf::Color(tempSpriteColor[0] * 255, tempSpriteColor[1] * 255, tempSpriteColor[2] * 255, sprites[tempSpriteArrayPosition].getColor().a * 255))
+		if (tempSprite->getColor() != sf::Color(tempSpriteColor[0] * 255, tempSpriteColor[1] * 255, tempSpriteColor[2] * 255, tempSprite->getColor().a * 255))
 		{
-			sprites[tempSpriteArrayPosition].setColor(sf::Color(
+			tempSprite->setColor(sf::Color(
 				tempSpriteColor[0],
 				tempSpriteColor[1],
 				tempSpriteColor[2],
-				sprites[tempSpriteArrayPosition].getColor().a));
+				tempSprite->getColor().a));
 		}
 	}
 
 	if (ImGui::InputFloat("opacity", (float*)&tempSpriteOpacity))
 	{
-		if (sprites[0].getOpacity() != tempSpriteOpacity)
+		if (tempSprite->getOpacity() != tempSpriteOpacity)
 		{
-			sprites[0].setOpacity(tempSpriteOpacity);
+			tempSprite->setOpacity(tempSpriteOpacity);
 		}
 	}
 
 	if (ImGui::SliderFloat("## opacity slider", (float*)&tempSpriteOpacity, 0.00f, 255.f, "opacity", 1.f))
 	{
-		if (sprites[0].getOpacity() != tempSpriteOpacity)
+		if (tempSprite->getOpacity() != tempSpriteOpacity)
 		{
-			sprites[0].setOpacity(tempSpriteOpacity);
+			tempSprite->setOpacity(tempSpriteOpacity);
 		}
 	}
 
 	if (ImGui::InputFloat("rotation", (float*)&tempSpriteRotation))
 	{
-		if (sprites[0].getRotation() != tempSpriteRotation)
+		if (tempSprite->getRotation() != tempSpriteRotation)
 		{
-			sprites[0].setRotation(tempSpriteRotation);
+			tempSprite->setRotation(tempSpriteRotation);
 		}
 	}
 
 	if (ImGui::SliderFloat("## rotaion slider", (float*)&tempSpriteRotation, 0.00f, 359.990f, "rotation", 1.f))
 	{
-		if (sprites[0].getRotation() != tempSpriteRotation)
+		if (tempSprite->getRotation() != tempSpriteRotation)
 		{
-			sprites[0].setRotation(tempSpriteRotation);
+			tempSprite->setRotation(tempSpriteRotation);
 		}
 	}
 
 	if (ImGui::InputInt("render layer", (int*)&tempSpriteRenderLayer))
 	{
-		if (sprites[0].getRenderLayer() != tempSpriteRenderLayer)
+		if (tempSprite->getRenderLayer() != tempSpriteRenderLayer)
 		{
-			sprites[0].setRenderLayer(tempSpriteRenderLayer);
+			tempSprite->setRenderLayer(tempSpriteRenderLayer);
 		}
 	}
 
-	if (ImGui::Button((sprites[tempSpriteArrayPosition].isRenderEnabled() ? "render - enabled" : "render - disabled")))
+	if (ImGui::Button((getSprite(tempSpriteArrayPosition).isRenderEnabled() ? "render - enabled" : "render - disabled")))
 	{
-		sprites[tempSpriteArrayPosition].setRenderEnabled(!sprites[tempSpriteArrayPosition].isRenderEnabled());
+		tempSprite->setRenderEnabled(!tempSprite->isRenderEnabled());
 	}
 
 	ImGui::End();
@@ -420,11 +422,11 @@ void Editor::renderImGui()
 void Editor::renderTexts(unsigned int renderLayer)
 {
 	// draw all texts on this layer
-	for (auto i = 0; i < texts.size(); i++)
+	for (auto i = 0; i < getTextCount(); i++)
 	{
-		if (texts[i].isRenderEnabled() && texts[i].getRenderLayer() == renderLayer)
+		if (getText(i).isRenderEnabled() && getText(i).getRenderLayer() == renderLayer)
 		{
-			getGlobalWindow().draw(texts[i]);
+			getGlobalWindow().draw(getText(i));
 		}
 	}
 }
@@ -432,11 +434,11 @@ void Editor::renderTexts(unsigned int renderLayer)
 void Editor::renderCircles(unsigned int renderLayer)
 {
 	// draw all circles on this layer
-	for (auto i = 0; i < circles.size(); i++)
+	for (auto i = 0; i < getCircleCount(); i++)
 	{
-		if (circles[i].isRenderEnabled() && circles[i].getRenderLayer() == renderLayer)
+		if (getCircle(i).isRenderEnabled() && getCircle(i).getRenderLayer() == renderLayer)
 		{
-			getGlobalWindow().draw(circles[i]);
+			getGlobalWindow().draw(getCircle(i));
 		}
 	}
 }
@@ -444,11 +446,11 @@ void Editor::renderCircles(unsigned int renderLayer)
 void Editor::renderRectangles(unsigned int renderLayer)
 {
 	// draw all rectangles on this layer
-	for (auto i = 0; i < rectangles.size(); i++)
+	for (auto i = 0; i < getRectangleCount(); i++)
 	{
-		if (rectangles[i].isRenderEnabled() && rectangles[i].getRenderLayer() == renderLayer)
+		if (getRectangle(i).isRenderEnabled() && getRectangle(i).getRenderLayer() == renderLayer)
 		{
-			getGlobalWindow().draw(rectangles[i]);
+			getGlobalWindow().draw(getRectangle(i));
 		}
 	}
 }
@@ -456,11 +458,11 @@ void Editor::renderRectangles(unsigned int renderLayer)
 void Editor::renderSprites(unsigned int renderLayer)
 {
 	// draw all sprites on this layer
-	for (auto i = 0; i < sprites.size(); i++)
+	for (auto i = 0; i < getSpriteCount(); i++)
 	{
-		if (sprites[i].isRenderEnabled() && sprites[i].getRenderLayer() == renderLayer)
+		if (getSprite(i).isRenderEnabled() && getSprite(i).getRenderLayer() == renderLayer)
 		{
-			getGlobalWindow().draw(sprites[i]);
+			getGlobalWindow().draw(getSprite(i));
 		}
 	}
 }
