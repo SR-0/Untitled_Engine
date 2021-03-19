@@ -10,6 +10,7 @@ void Editor::create()
 	createFonts();
 	createTextures();
 	createSounds();
+	createMusic();
 	createTexts();
 	createCircles();
 	createRectangles();
@@ -25,6 +26,7 @@ void Editor::setup()
 	setupFonts();
 	setupTextures();
 	setupSounds();
+	setupMusic();
 	setupTexts();
 	setupCircles();
 	setupRectangles();
@@ -38,6 +40,8 @@ void Editor::update()
 	updateCore();
 	updateImGui();
 	updateTexts();
+	updateSounds();
+	updateMusic();
 	updateCircles();
 	updateRectangles();
 	updateSprites();
@@ -67,6 +71,7 @@ void Editor::destroy()
 	destroyFonts();
 	destroyTextures();
 	destroySounds();
+	destroyMusic();
 	destroyTexts();
 	destroyCircles();
 	destroyRectangles();
@@ -85,42 +90,53 @@ void Editor::destroy()
 
 void Editor::createCore()
 {
+	//
 }
 
 void Editor::createSoundBuffers()
 {
+	pushSoundBuffer("ok"); // 0
 }
 
 void Editor::createFonts()
 {
+	//
 }
 
 void Editor::createTextures()
 {
-	pushTexture("background_1280x720"); // 0 - 1280x720 resolution background texture
-	pushTexture("cyan_guy_stand");		// 1 - cyan guy texture
+	pushTexture("background_1280x720"); // 0
+	pushTexture("cyan_guy_stand");		// 1
 }
 
 void Editor::createSounds()
 {
+	pushSound("ok"); // 0
+}
+
+void Editor::createMusic()
+{
+	pushMusic("inner_light");
 }
 
 void Editor::createTexts()
 {
+	//
 }
 
 void Editor::createCircles()
 {
+	//
 }
 
 void Editor::createRectangles()
 {
-	pushRectangle("background"); // 0 - 1280x720 resolution background rectangle
+	pushRectangle("background"); // 0
 }
 
 void Editor::createSprites()
 {
-	pushSprite("cyan_guy"); // 0 - test ImGui sprite
+	pushSprite("cyan_guy"); // 0
 }
 
 #pragma endregion
@@ -151,7 +167,7 @@ void Editor::setupCore()
 
 void Editor::setupSoundBuffers()
 {
-	//
+	getSoundBuffer("ok").loadFromFile("Resource/Sounds/ok.wav");
 }
 
 void Editor::setupFonts()
@@ -167,7 +183,14 @@ void Editor::setupTextures()
 
 void Editor::setupSounds()
 {
-	//
+	getSound("ok").setBuffer(getSoundBuffer("ok"));
+}
+
+void Editor::setupMusic()
+{
+	getMusic(0).openFromFile("Resource/Music/inner_light.wav");
+	getMusic(0).setVolume(0);
+	getMusic(0).play();
 }
 
 void Editor::setupTexts()
@@ -228,7 +251,11 @@ void Editor::setupSprites()
 
 void Editor::updateCore()
 {
-	//
+	// easy scene trasition atm for testing only, final editor wont need this
+	if (Keyboard::isKeyPressed(Keyboard::Enter))
+	{
+		StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::DESTROY);
+	}
 }
 
 void Editor::updateImGui()
@@ -392,6 +419,26 @@ void Editor::updateTexts()
 	//
 }
 
+void Editor::updateSounds()
+{
+	//
+}
+
+void Editor::updateMusic()
+{
+	Music* pInnerLight = &getMusic("inner_light");
+
+	if (pInnerLight->getVolume() < 100)
+	{
+		pInnerLight->setVolume(pInnerLight->getVolume() + 0.1f);
+
+		if (pInnerLight->getVolume() >= 100)
+		{
+			pInnerLight->setVolume(100);
+		}
+	}
+}
+
 void Editor::updateCircles()
 {
 	//
@@ -404,6 +451,7 @@ void Editor::updateRectangles()
 
 void Editor::updateSprites()
 {
+	//
 }
 
 #pragma endregion
@@ -498,6 +546,14 @@ void Editor::destroyTextures()
 void Editor::destroySounds()
 {
 	//
+}
+
+void Editor::destroyMusic()
+{
+	for (auto i = 0; i < getMusicCount(); i++)
+	{
+		delete &getMusic(i);
+	}
 }
 
 void Editor::destroyTexts()

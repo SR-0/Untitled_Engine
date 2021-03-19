@@ -289,20 +289,21 @@ void SceneLoading::updateLoadingBars(RectangleShape& bar1, RectangleShape& bar2)
 	{
 		if (bar1.getSize().x > 0)
 		{
-			bar1.grow(
-				sf::Vector2f(
+			bar1.grow(sf::Vector2f(
 					-(bar1.getSpeed().x * DeltaManager::Restart.asMilliseconds()), 
 					-(bar1.getSpeed().y * DeltaManager::Restart.asMilliseconds())));
+
 			bar1.setSpeed(bar1.getSpeed().x + .05f, bar1.getSpeed().y);
 		}
 
 		if (bar2.getSize().x > 0)
 		{
-			bar2.grow(
-				sf::Vector2f(
+			bar2.grow(sf::Vector2f(
 					-(bar2.getSpeed().x * DeltaManager::Restart.asMilliseconds()),
 					-(bar2.getSpeed().y * DeltaManager::Restart.asMilliseconds())));
+
 			bar2.setSpeed(bar2.getSpeed().x + .05f, bar2.getSpeed().y);
+
 			bar2.setPosition(resolution.x - bar2.getSize().x, bar2.getPosition().y);
 		}
 	}
@@ -329,7 +330,7 @@ void SceneLoading::updateSplashScreen(RectangleShape& splashScreen)
 
 				if (splashScreen.isOpaque())
 				{
-					StateManager::GenericSceneState = GENERIC_SCENE_STATE::DESTROY;
+					StateManager::GetGenericSceneState() = GENERIC_SCENE_STATE::DESTROY;
 				}
 			}
 		}

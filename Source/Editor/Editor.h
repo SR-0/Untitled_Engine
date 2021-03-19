@@ -19,6 +19,7 @@ public:
 	void createFonts();
 	void createTextures();
 	void createSounds();
+	void createMusic();
 	void createTexts();
 	void createCircles();
 	void createRectangles();
@@ -31,6 +32,7 @@ public:
 	void setupFonts();
 	void setupTextures();
 	void setupSounds();
+	void setupMusic();
 	void setupTexts();
 	void setupCircles();
 	void setupRectangles();
@@ -41,6 +43,8 @@ public:
 	void updateCore();
 	void updateImGui();
 	void updateTexts();
+	void updateSounds();
+	void updateMusic();
 	void updateCircles();
 	void updateRectangles();
 	void updateSprites();
@@ -60,6 +64,7 @@ public:
 	void destroyFonts();
 	void destroyTextures();
 	void destroySounds();
+	void destroyMusic();
 	void destroyTexts();
 	void destroyCircles();
 	void destroyRectangles();
