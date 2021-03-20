@@ -44,7 +44,7 @@ void SceneExampleSimple::render()
 
 	// vvv draw frame vvv
 
-	// draw all layers for this frame frame
+	// draw all layers for this frame
 	for (unsigned int renderLayer = 1; renderLayer <= getRenderLayerCount(); renderLayer++)
 	{
 		for (unsigned int i = 0; i < getRectangleCount(); i++)

@@ -64,20 +64,12 @@ public:
 
 public:
 
-	void clearSoundBuffers()	{ soundBuffers.clear();																		soundBufferIDs.clear();	}
+	void clearSoundBuffers(){ soundBuffers.clear();																		soundBufferIDs.clear();	}
 	void clearSounds()		{ sounds.clear();																			soundIDs.clear();		}
-	void clearMusic()		
-	{ 
-		for (unsigned int i = 0; i < musicIDs.size();	i++) 
-		{ 
-			delete music[i]; 
-		} 
-		music.clear();	
-		musicIDs.clear();		
-	} // fix music mem leak silly
+	void clearMusic()		{ for (unsigned int i = 0; i < musicIDs.size();	i++) { delete music[i]; } music.clear();	musicIDs.clear();		} // fix music mem leak silly
 	void clearFonts()		{ fonts.clear();																			fontIDs.clear();		}
 	void clearTexts()		{ texts.clear();																			textIDs.clear();		}
-	void clearTextures()		{ textures.clear();																			textureIDs.clear();		}
+	void clearTextures()	{ textures.clear();																			textureIDs.clear();		}
 	void clearCircles()		{ circles.clear();																			circleIDs.clear();		}
 	void clearRectangles()	{ rectangles.clear();																		rectangleIDs.clear();	}
 	void clearSprites()		{ sprites.clear();																			spriteIDs.clear();		}
