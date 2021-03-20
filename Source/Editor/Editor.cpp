@@ -51,7 +51,7 @@ void Editor::render()
 {
 	getGlobalWindow().clear(uiClearColor);
 
-	for (auto renderLayer = 1; renderLayer <= getRenderLayerCount(); renderLayer++)
+	for (unsigned int renderLayer = 1; renderLayer <= getRenderLayerCount(); renderLayer++)
 	{
 		renderTexts(renderLayer);
 		renderCircles(renderLayer);
@@ -66,18 +66,28 @@ void Editor::render()
 
 void Editor::destroy()
 {
-	destroyCore();
-	destroySoundBuffers();
-	destroyFonts();
-	destroyTextures();
-	destroySounds();
-	destroyMusic();
-	destroyTexts();
-	destroyCircles();
-	destroyRectangles();
-	destroySprites();
+	// fade out background (testing only - will delete soon)
+	if (!getRectangle(0).isTransparent())
+	{
+		getRectangle(0).fadeOut(3.f);
+	}
+	else
+	{
+		destroyCore();
+		destroySoundBuffers();
+		destroyFonts();
+		destroyTextures();
+		destroySounds();
+		destroyMusic();
+		destroyTexts();
+		destroyCircles();
+		destroyRectangles();
+		destroySprites();
 
-	StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::INACTIVE);
+		clearAllResources();
+
+		StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::INACTIVE);
+	}
 }
 
 #pragma endregion
@@ -191,6 +201,9 @@ void Editor::setupMusic()
 	getMusic(0).openFromFile("Resource/Music/inner_light.wav");
 	getMusic(0).setVolume(0);
 	getMusic(0).play();
+
+	tempMusicArrayPosition	= 0;
+	tempMusicVolume			= getMusic(0).getVolume();
 }
 
 void Editor::setupTexts()
@@ -251,18 +264,29 @@ void Editor::setupSprites()
 
 void Editor::updateCore()
 {
-	// easy scene trasition atm for testing only, final editor wont need this
+	// testing transition and "in-scene" scene setup only, final editor wont need this
 	if (Keyboard::isKeyPressed(Keyboard::Enter))
 	{
 		StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::DESTROY);
+
+		if (SceneManager::GetQueuedScene() != nullptr)
+		{
+			SceneManager::DetachQueuedScene();
+		}
+
+		SceneManager::AttachQueuedScene(*SceneManager::GetScene("Loading"));
 	}
 }
 
 void Editor::updateImGui()
 {
-	Sprite* tempSprite = &getSprite(tempSpriteArrayPosition);
+	// temp pointers for cleaner code
+	Sprite* pSelectedSprite = &getSprite(tempSpriteArrayPosition);
 
 	ImGui::SFML::Update(getGlobalWindow(), DeltaManager::Restart);
+
+
+
 
 
 	/* BEGIN */
@@ -291,108 +315,111 @@ void Editor::updateImGui()
 
 	ImGui::Image(getTexture("cyan_guy_stand"));
 
-	std::string size = "original size: "
-		+ std::to_string(int(tempSprite->getTexture()->getSize().x)) + "x"
-		+ std::to_string(int(tempSprite->getTexture()->getSize().y));
+	std::string sizeStr = "original size: "
+		+ std::to_string(int(pSelectedSprite->getTexture()->getSize().x)) + "x"
+		+ std::to_string(int(pSelectedSprite->getTexture()->getSize().y));
 
-	ImGui::Text(size.c_str());
+	ImGui::Text(sizeStr.c_str());
 
-	std::string scaledSize = "scaled size: "
-		+ std::to_string(int( (tempSprite->getTexture()->getSize().x) * tempSprite->getScale().x) ) + "x"
-		+ std::to_string(int( (tempSprite->getTexture()->getSize().y) * tempSprite->getScale().y) );
+	std::string scaledSizeStr = "scaled size: "
+		+ std::to_string(int( (pSelectedSprite->getTexture()->getSize().x) * pSelectedSprite->getScale().x) ) + "x"
+		+ std::to_string(int( (pSelectedSprite->getTexture()->getSize().y) * pSelectedSprite->getScale().y) );
 
-	ImGui::Text(scaledSize.c_str());
+	ImGui::Text(scaledSizeStr.c_str());
 
+	std::string renderLayerCountStr = "total render layers: " + std::to_string(getRenderLayerCount());
+
+	ImGui::Text(renderLayerCountStr.c_str());
 
 	if (ImGui::InputFloat2("origin", (float*)&tempSpriteOrigin))
 	{
-		if (tempSprite->getOrigin().x != tempSpriteOrigin[0])
+		if (pSelectedSprite->getOrigin().x != tempSpriteOrigin[0])
 		{
-			tempSprite->setOrigin(tempSpriteOrigin[0], tempSprite->getOrigin().y);
+			pSelectedSprite->setOrigin(tempSpriteOrigin[0], pSelectedSprite->getOrigin().y);
 		}
 
-		if (tempSprite->getOrigin().y != tempSpriteOrigin[1])
+		if (pSelectedSprite->getOrigin().y != tempSpriteOrigin[1])
 		{
-			tempSprite->setOrigin(tempSprite->getOrigin().x, tempSpriteOrigin[1]);
+			pSelectedSprite->setOrigin(pSelectedSprite->getOrigin().x, tempSpriteOrigin[1]);
 		}
 	}
 
 	if (ImGui::InputFloat2("scale", (float*)&tempSpriteScale))
 	{
-		if (tempSprite->getScale().x != tempSpriteScale[0])
+		if (pSelectedSprite->getScale().x != tempSpriteScale[0])
 		{
-			tempSprite->setScale(tempSpriteScale[0], tempSprite->getScale().y);
+			pSelectedSprite->setScale(tempSpriteScale[0], pSelectedSprite->getScale().y);
 		}
 
-		if (tempSprite->getScale().y != tempSpriteScale[1])
+		if (pSelectedSprite->getScale().y != tempSpriteScale[1])
 		{
-			tempSprite->setScale(tempSprite->getScale().x, tempSpriteScale[1]);
+			pSelectedSprite->setScale(pSelectedSprite->getScale().x, tempSpriteScale[1]);
 		}
 	}
 
 
 	if (ImGui::InputFloat2("position", (float*)&tempSpritePosition))
 	{
-		tempSprite->setPosition(
-				tempSpritePosition[0] /tempSprite->getScale().x, 
-				tempSpritePosition[1] /tempSprite->getScale().y);
+		pSelectedSprite->setPosition(
+				tempSpritePosition[0] /pSelectedSprite->getScale().x, 
+				tempSpritePosition[1] /pSelectedSprite->getScale().y);
 	}
 
 	if (ImGui::ColorEdit3("color", (float*)&tempSpriteColor))
 	{
-		if (tempSprite->getColor() != sf::Color(tempSpriteColor[0] * 255, tempSpriteColor[1] * 255, tempSpriteColor[2] * 255, tempSprite->getColor().a * 255))
+		if (pSelectedSprite->getColor() != sf::Color(tempSpriteColor[0] * 255, tempSpriteColor[1] * 255, tempSpriteColor[2] * 255, pSelectedSprite->getColor().a * 255))
 		{
-			tempSprite->setColor(sf::Color(
+			pSelectedSprite->setColor(sf::Color(
 				tempSpriteColor[0],
 				tempSpriteColor[1],
 				tempSpriteColor[2],
-				tempSprite->getColor().a));
+				pSelectedSprite->getColor().a));
 		}
 	}
 
 	if (ImGui::InputFloat("opacity", (float*)&tempSpriteOpacity))
 	{
-		if (tempSprite->getOpacity() != tempSpriteOpacity)
+		if (pSelectedSprite->getOpacity() != tempSpriteOpacity)
 		{
-			tempSprite->setOpacity(tempSpriteOpacity);
+			pSelectedSprite->setOpacity(tempSpriteOpacity);
 		}
 	}
 
 	if (ImGui::SliderFloat("## opacity slider", (float*)&tempSpriteOpacity, 0.00f, 255.f, "opacity", 1.f))
 	{
-		if (tempSprite->getOpacity() != tempSpriteOpacity)
+		if (pSelectedSprite->getOpacity() != tempSpriteOpacity)
 		{
-			tempSprite->setOpacity(tempSpriteOpacity);
+			pSelectedSprite->setOpacity(tempSpriteOpacity);
 		}
 	}
 
 	if (ImGui::InputFloat("rotation", (float*)&tempSpriteRotation))
 	{
-		if (tempSprite->getRotation() != tempSpriteRotation)
+		if (pSelectedSprite->getRotation() != tempSpriteRotation)
 		{
-			tempSprite->setRotation(tempSpriteRotation);
+			pSelectedSprite->setRotation(tempSpriteRotation);
 		}
 	}
 
-	if (ImGui::SliderFloat("## rotaion slider", (float*)&tempSpriteRotation, 0.00f, 359.990f, "rotation", 1.f))
+	if (ImGui::SliderFloat("## rotaion slider", (float*)&tempSpriteRotation, 0.00f, 359.999f, "rotation", 1.f))
 	{
-		if (tempSprite->getRotation() != tempSpriteRotation)
+		if (pSelectedSprite->getRotation() != tempSpriteRotation)
 		{
-			tempSprite->setRotation(tempSpriteRotation);
+			pSelectedSprite->setRotation(tempSpriteRotation);
 		}
 	}
 
 	if (ImGui::InputInt("render layer", (int*)&tempSpriteRenderLayer))
 	{
-		if (tempSprite->getRenderLayer() != tempSpriteRenderLayer)
+		if (pSelectedSprite->getRenderLayer() != tempSpriteRenderLayer)
 		{
-			tempSprite->setRenderLayer(tempSpriteRenderLayer);
+			pSelectedSprite->setRenderLayer(tempSpriteRenderLayer);
 		}
 	}
 
 	if (ImGui::Button((getSprite(tempSpriteArrayPosition).isRenderEnabled() ? "render - enabled" : "render - disabled")))
 	{
-		tempSprite->setRenderEnabled(!tempSprite->isRenderEnabled());
+		pSelectedSprite->setRenderEnabled(!pSelectedSprite->isRenderEnabled());
 	}
 
 	ImGui::End();
@@ -400,11 +427,12 @@ void Editor::updateImGui()
 
 
 
+
+
 	/* BEGIN */
 	//ImGui::Begin("MinMaxClose", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground);
 	//ImGui::Begin("MinMaxClose", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar);
 	ImGui::Begin("MinMaxClose", (bool*)false, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoResize);
-
 
 	ImGui::SameLine();	if (ImGui::Button("_",	ImVec2(resolution.x / 40, resolution.y / 40)))	{}
 	ImGui::SameLine();	if (ImGui::Button("[]", ImVec2(resolution.x / 40, resolution.y / 40)))	{}
@@ -426,15 +454,17 @@ void Editor::updateSounds()
 
 void Editor::updateMusic()
 {
-	Music* pInnerLight = &getMusic("inner_light");
+	static bool	musicFadedIn	= false;
+	Music*		pSelectedMusic	= &getMusic("inner_light");
 
-	if (pInnerLight->getVolume() < 100)
+	if (!musicFadedIn && pSelectedMusic->getVolume() < 100)
 	{
-		pInnerLight->setVolume(pInnerLight->getVolume() + 0.1f);
+		pSelectedMusic->setVolume(pSelectedMusic->getVolume() + 0.1f);
 
-		if (pInnerLight->getVolume() >= 100)
+		if (pSelectedMusic->getVolume() >= 100)
 		{
-			pInnerLight->setVolume(100);
+			pSelectedMusic->setVolume(100);
+			musicFadedIn = true;
 		}
 	}
 }
@@ -470,7 +500,7 @@ void Editor::renderImGui()
 void Editor::renderTexts(unsigned int renderLayer)
 {
 	// draw all texts on this layer
-	for (auto i = 0; i < getTextCount(); i++)
+	for (unsigned int i = 0; i < getTextCount(); i++)
 	{
 		if (getText(i).isRenderEnabled() && getText(i).getRenderLayer() == renderLayer)
 		{
@@ -482,7 +512,7 @@ void Editor::renderTexts(unsigned int renderLayer)
 void Editor::renderCircles(unsigned int renderLayer)
 {
 	// draw all circles on this layer
-	for (auto i = 0; i < getCircleCount(); i++)
+	for (unsigned int i = 0; i < getCircleCount(); i++)
 	{
 		if (getCircle(i).isRenderEnabled() && getCircle(i).getRenderLayer() == renderLayer)
 		{
@@ -494,7 +524,7 @@ void Editor::renderCircles(unsigned int renderLayer)
 void Editor::renderRectangles(unsigned int renderLayer)
 {
 	// draw all rectangles on this layer
-	for (auto i = 0; i < getRectangleCount(); i++)
+	for (unsigned int i = 0; i < getRectangleCount(); i++)
 	{
 		if (getRectangle(i).isRenderEnabled() && getRectangle(i).getRenderLayer() == renderLayer)
 		{
@@ -506,7 +536,7 @@ void Editor::renderRectangles(unsigned int renderLayer)
 void Editor::renderSprites(unsigned int renderLayer)
 {
 	// draw all sprites on this layer
-	for (auto i = 0; i < getSpriteCount(); i++)
+	for (unsigned int i = 0; i < getSpriteCount(); i++)
 	{
 		if (getSprite(i).isRenderEnabled() && getSprite(i).getRenderLayer() == renderLayer)
 		{
@@ -550,10 +580,7 @@ void Editor::destroySounds()
 
 void Editor::destroyMusic()
 {
-	for (auto i = 0; i < getMusicCount(); i++)
-	{
-		delete &getMusic(i);
-	}
+	//
 }
 
 void Editor::destroyTexts()

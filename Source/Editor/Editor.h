@@ -80,6 +80,9 @@ public:
 	sf::Color		uiClearColor;
 	sf::Vector2f	resolution;
 
+	unsigned int	tempMusicArrayPosition;
+	bool			tempMusicVolume;
+
 	unsigned int	tempSpriteArrayPosition;
 	float			tempSpriteOrigin[2];
 	float			tempSpriteScale[2];
@@ -88,6 +91,6 @@ public:
 	float			tempSpriteOpacity;
 	float			tempSpriteRotation;
 	bool			tempSpriteRenderEnabled;
-	unsigned int	tempSpriteRenderLayer;		
+	unsigned int	tempSpriteRenderLayer;
 };
 

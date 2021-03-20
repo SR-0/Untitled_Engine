@@ -1,9 +1,6 @@
 #include "Engine.h"
 
-
-
-
-// static declarations (core)
+// static declarations (engine globals)
 sf::VideoMode			Engine::GlobalVideoMode;
 sf::String				Engine::GlobalTitle;
 sf::Uint32				Engine::GlobalStyle;
@@ -12,14 +9,6 @@ unsigned int			Engine::GlobalFramerateLimit;
 sf::Vector2f			Engine::GlobalAspectRatio;
 sf::Vector2f			Engine::GlobalScale;
 RenderWindow*			Engine::GlobalWindow;
-
-// static declarations (scenes)
-Scene*	Engine::ActiveScene; 
-Scene*	Engine::QueuedScene;
-
-
-
-
 
 void Engine::Initialize(
 	const sf::VideoMode&		videoMode, 
@@ -45,19 +34,10 @@ void Engine::Setup(SETUP_FLAG flags)
 	EventManager::AttachGlobalWindow(*GlobalWindow);
 }
 
-void Engine::AttachQueuedScene(Scene& scene)
+void Engine::AttachActiveSceneGlobals()
 {
-	// point/set engine's "QueuedScene" to scene parameter reference
-	QueuedScene = &scene;
-}
-
-void Engine::AttachActiveScene(Scene& scene)
-{
-	// point/set engine's "ActiveScene" to scene parameter reference
-	ActiveScene = &scene;
-
-	// attach globals to active scene
-	ActiveScene->attachGlobals(
+	// attach engine globals to new active scene
+	SceneManager::GetActiveScene()->attachGlobals(
 		GlobalVideoMode,
 		GlobalTitle,
 		GlobalStyle,
@@ -70,22 +50,17 @@ void Engine::AttachActiveScene(Scene& scene)
 
 void Engine::ExcuteActiveScene()
 {
-	if (ActiveScene != nullptr) // if there is an active scene attached to engine
+	if (SceneManager::GetActiveScene() != nullptr) // if there is an active scene attached to engine
 	{
 		if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::CREATE)
 		{
 			// create scene
-			ActiveScene->create();
+			SceneManager::GetActiveScene()->create();
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::SETUP)
 		{
 			// setup scene
-			ActiveScene->setup();
-		}
-		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::DESTROY)
-		{
-			// destroy scene
-			ActiveScene->destroy();
+			SceneManager::GetActiveScene()->setup();
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::ACTIVE)
 		{
@@ -97,33 +72,49 @@ void Engine::ExcuteActiveScene()
 			SceneManager::Update();
 
 			// update scene
-			ActiveScene->update();
+			SceneManager::GetActiveScene()->update();
 
 			// render scene
-			ActiveScene->render();
+			SceneManager::GetActiveScene()->render();
+		}
+		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::DESTROY)
+		{
+			// destroy scene
+			SceneManager::GetActiveScene()->destroy();
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::INACTIVE)
 		{
-			// reset generic scene state
+			// reset generic scene state for next scene processed
 			StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::CREATE);
 
-			// detach active scene from core components
-			DetachActiveScene();
+			// detach engine globals from current active scene
+			DetachActiveSceneGlobals();
+
+			// detach current active scene from SceneManager's active scene (sets it to nullptr)
+			SceneManager::DetachActiveScene();
 
 			// recursive
 			ExcuteActiveScene();
 		}
 	}
-	else if (QueuedScene != nullptr) // if there is a queued scene attached to engine
+	else if (SceneManager::GetQueuedScene() != nullptr) // if there is a queued scene attached to engine
 	{
 		// point active scene to queued scene
-		AttachActiveScene(*QueuedScene);
+		SceneManager::AttachActiveScene(*SceneManager::GetQueuedScene());
 
-		// detach queued scene 
-		DetachQueuedScene();
+		// detach current queued scene from SceneManager's queued scene (sets it to nullptr)
+		SceneManager::DetachQueuedScene();
+
+		// attach engine globals to new active scene
+		AttachActiveSceneGlobals();
 
 		// recursive
 		ExcuteActiveScene();
+	}
+	else if (SceneManager::GetDefaultScene() != nullptr) // if there aren't any scenes queued
+	{
+		// attach the designated default scene (a loading screen atm)
+		SceneManager::AttachQueuedScene(*SceneManager::GetDefaultScene());
 	}
 	else
 	{
@@ -131,44 +122,28 @@ void Engine::ExcuteActiveScene()
 	}
 }
 
-void Engine::DetachQueuedScene()
+void Engine::DetachActiveSceneGlobals()
 {
-	// stop pointing "QueuedScene" at current queued scene reference
-	QueuedScene = nullptr;
-}
-
-void Engine::DetachActiveScene()
-{
-	// detach globals from active scene
-	ActiveScene->detachGlobals();
-
-	// stop pointing "ActiveScene" at current active scene reference
-	ActiveScene = nullptr;
+	// detach engine globals from current active scene
+	SceneManager::GetActiveScene()->detachGlobals();
 }
 
 void Engine::Exit()
 {
-	// detach active scene
-	DetachActiveScene();
+	// detach globals from current active scene
+	SceneManager::GetActiveScene()->detachGlobals();
+
+	// detach current active scene from SceneManager's active scene (sets it to nullptr)
+	SceneManager::DetachActiveScene();
 
 	// detach queued scene
-	DetachQueuedScene();
+	SceneManager::DetachQueuedScene();
 
 	// manager clean up
 	EventManager::DetachGlobalWindow();
 
 	// state flags soon
 	delete GlobalWindow;
-}
-
-Scene* Engine::GetActiveScene()
-{
-	return ActiveScene;
-}
-
-Scene* Engine::GetQueuedScene()
-{
-	return QueuedScene;
 }
 
 bool Engine::IsRunning()

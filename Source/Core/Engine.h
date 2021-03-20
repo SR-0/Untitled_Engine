@@ -1,6 +1,6 @@
 #pragma once
 
-#include "managers/SceneManager.h"
+#include "Core/SceneList.h"
 
 enum class SETUP_FLAG : uint8_t
 {
@@ -20,17 +20,13 @@ public:
 
 	static void Initialize(const sf::VideoMode& videoMode, const sf::String& title, const sf::Uint32& style, const sf::ContextSettings& contextSettings, unsigned int framerateLimit);
 	static void Setup(SETUP_FLAG flags = SETUP_FLAG::TO_DO_1);
-	static void AttachQueuedScene(Scene& scene);
-	static void AttachActiveScene(Scene& scene);
+	static void AttachActiveSceneGlobals();
 	static void ExcuteActiveScene();
-	static void DetachQueuedScene();
-	static void DetachActiveScene();
+	static void DetachActiveSceneGlobals();
 	static void Exit();
 
 public:
 
-	static Scene*	GetActiveScene();
-	static Scene*	GetQueuedScene();
 	static bool		IsRunning();
 
 private:
@@ -43,10 +39,5 @@ private:
 	static sf::Vector2f				GlobalAspectRatio;
 	static sf::Vector2f				GlobalScale;
 	static RenderWindow*			GlobalWindow;
-
-private:
-
-	static Scene* ActiveScene;
-	static Scene* QueuedScene;
 
 };

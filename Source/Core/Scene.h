@@ -5,13 +5,19 @@
 #include "Managers/DeltaManager.h"
 #include "Managers/EventManager.h"
 #include "Managers/StateManager.h"
+#include "Managers/SceneManager.h"
+
+/*
+
+	"will clean up with .cpp soon lulz" - SR_0
+
+*/
 
 class Scene
 {
 public:
 
 	Scene() = default;
-	~Scene() { detachGlobals(); }
 
 public:
 
@@ -46,27 +52,35 @@ public:
 
 public:
 
-	void popSoundBuffer()	{ soundBuffers.pop_back();	soundBufferIDs.pop_back();	}
-	void popSound()			{ sounds.pop_back();		soundIDs.pop_back();		}
-	void popMusic()			{ music.pop_back();			musicIDs.pop_back();		}
-	void popFont()			{ fonts.pop_back();			fontIDs.pop_back();			}
-	void popText()			{ texts.pop_back();			textIDs.pop_back();			}
-	void popTexture()		{ textures.pop_back();		textureIDs.pop_back();		}
-	void popCircle()		{ circles.pop_back();		circleIDs.pop_back();		}
-	void popRectangle()		{ rectangles.pop_back();	rectangleIDs.pop_back();	}
-	void popSprite()		{ sprites.pop_back();		spriteIDs.pop_back();		}
+	void popSoundBuffer()	{ soundBuffers.pop_back();								soundBufferIDs.pop_back();	}
+	void popSound()			{ sounds.pop_back();									soundIDs.pop_back();		}
+	void popMusic()			{ delete music[music.size() - 1];	music.pop_back();	musicIDs.pop_back();		} // fix music mem leak silly
+	void popFont()			{ fonts.pop_back();										fontIDs.pop_back();			}
+	void popText()			{ texts.pop_back();										textIDs.pop_back();			}
+	void popTexture()		{ textures.pop_back();									textureIDs.pop_back();		}
+	void popCircle()		{ circles.pop_back();									circleIDs.pop_back();		}
+	void popRectangle()		{ rectangles.pop_back();								rectangleIDs.pop_back();	}
+	void popSprite()		{ sprites.pop_back();									spriteIDs.pop_back();		}
 
 public:
 
-	void clearSoundBuffer()	{ soundBuffers.clear();	soundBufferIDs.clear();	}
-	void clearSound()		{ sounds.clear();		soundIDs.clear();		}
-	void clearMusic()		{ music.clear();		musicIDs.clear();		}
-	void clearFont()		{ fonts.clear();		fontIDs.clear();		}
-	void clearText()		{ texts.clear();		textIDs.clear();		}
-	void clearTexture()		{ textures.clear();		textureIDs.clear();		}
-	void clearCircle()		{ circles.clear();		circleIDs.clear();		}
-	void clearRectangle()	{ rectangles.clear();	rectangleIDs.clear();	}
-	void clearSprite()		{ sprites.clear();		spriteIDs.clear();		}
+	void clearSoundBuffer()	{ soundBuffers.clear();																		soundBufferIDs.clear();	}
+	void clearSound()		{ sounds.clear();																			soundIDs.clear();		}
+	void clearMusic()		
+	{ 
+		for (unsigned int i = 0; i < musicIDs.size();	i++) 
+		{ 
+			delete music[i]; 
+		} 
+		music.clear();	
+		musicIDs.clear();		
+	} // fix music mem leak silly
+	void clearFont()		{ fonts.clear();																			fontIDs.clear();		}
+	void clearText()		{ texts.clear();																			textIDs.clear();		}
+	void clearTexture()		{ textures.clear();																			textureIDs.clear();		}
+	void clearCircle()		{ circles.clear();																			circleIDs.clear();		}
+	void clearRectangle()	{ rectangles.clear();																		rectangleIDs.clear();	}
+	void clearSprite()		{ sprites.clear();																			spriteIDs.clear();		}
 
 public:
 

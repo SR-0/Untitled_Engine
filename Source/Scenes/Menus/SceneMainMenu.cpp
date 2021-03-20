@@ -14,11 +14,6 @@ void SceneMainMenu::setup()
 
 void SceneMainMenu::update()
 {
-	// core update
-	DeltaManager::Update();
-	EventManager::Update();
-	StateManager::Update();
-
 	// test main menu end (cut this and replace with actual loading)
 	if (Keyboard::isKeyPressed(Keyboard::Enter))
 	{
