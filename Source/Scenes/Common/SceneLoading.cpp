@@ -23,9 +23,6 @@ void SceneLoading::create()
 	pushRectangle("loading_bar_1"); // 4
 	pushRectangle("loading_bar_2"); // 5
 	pushRectangle("splash_screen"); // 6
-
-	// switch to setup
-	StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::SETUP);
 }
 
 void SceneLoading::setup()
@@ -35,12 +32,6 @@ void SceneLoading::setup()
 	setupFonts();
 	setupTexts();
 	setupRectangles();
-
-	// switch to loop
-	if (StateManager::GetGenericSceneState() != GENERIC_SCENE_STATE::INACTIVE)
-	{
-		StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::ACTIVE);
-	}
 }
 
 void SceneLoading::update()
@@ -91,8 +82,6 @@ void SceneLoading::render()
 void SceneLoading::destroy()
 {
 	clearAllResources();
-
-	StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::INACTIVE);
 }
 
 #pragma endregion MAIN SECTION

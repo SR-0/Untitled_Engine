@@ -15,8 +15,6 @@ void Editor::create()
 	createCircles();
 	createRectangles();
 	createSprites();
-
-	StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::SETUP);
 }
 
 void Editor::setup()
@@ -31,8 +29,6 @@ void Editor::setup()
 	setupCircles();
 	setupRectangles();
 	setupSprites();
-
-	StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::ACTIVE);
 }
 
 void Editor::update()
@@ -66,28 +62,18 @@ void Editor::render()
 
 void Editor::destroy()
 {
-	// fade out background (testing only - will delete soon)
-	if (!getRectangle(0).isTransparent())
-	{
-		getRectangle(0).fadeOut(3.f);
-	}
-	else
-	{
-		destroyCore();
-		destroySoundBuffers();
-		destroyFonts();
-		destroyTextures();
-		destroySounds();
-		destroyMusic();
-		destroyTexts();
-		destroyCircles();
-		destroyRectangles();
-		destroySprites();
+	destroyCore();
+	destroySoundBuffers();
+	destroyFonts();
+	destroyTextures();
+	destroySounds();
+	destroyMusic();
+	destroyTexts();
+	destroyCircles();
+	destroyRectangles();
+	destroySprites();
 
-		clearAllResources();
-
-		StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::INACTIVE);
-	}
+	clearAllResources();
 }
 
 #pragma endregion
