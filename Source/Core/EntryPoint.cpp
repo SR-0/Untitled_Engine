@@ -35,20 +35,19 @@ int main()
 	Engine::Setup(SETUP_FLAG::TO_DO_1);
 	
 	// push/create desired scenes included in "SceneList.h"
-	SceneManager::PushBackScene(new SceneLoading(),	"Loading"	);	// 0
-	SceneManager::PushBackScene(new Editor(),		"Editor"	);	// 1
+	SceneManager::PushScene(new Editor(),				"Editor");			// 0 - editor is just another derived scene in disguise 
+	SceneManager::PushScene(new SceneLoading(),			"Loading");			// 1
+	SceneManager::PushScene(new SceneExampleBlank(),	"Example - Blank");	// 2
+	SceneManager::PushScene(new SceneExampleSimple(),	"Example - Simple");	// 2
 
 	// attach default scene in SceneManager (optional but recommended depending on what you're doing)
-	SceneManager::AttachDefaultScene(*SceneManager::GetScene("Loading"));
+	SceneManager::AttachDefaultScene(*SceneManager::GetScene("Example - Simple"));
 
 	// attach active (current) scene in SceneManager
 	SceneManager::AttachActiveScene(*SceneManager::GetScene("Loading"));
 
 	// attach queued scene for when active scene is over in SceneManager for automatic engine transition (optional - can also queue scenes from within scenes)
 	SceneManager::AttachQueuedScene(*SceneManager::GetScene("Editor"));
-	
-	// attach engine globals to new active scene
-	Engine::AttachActiveSceneGlobals();
 	
 	// main engine loop
 	while (Engine::IsRunning())

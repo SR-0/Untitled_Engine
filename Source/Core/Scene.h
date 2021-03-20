@@ -64,8 +64,8 @@ public:
 
 public:
 
-	void clearSoundBuffer()	{ soundBuffers.clear();																		soundBufferIDs.clear();	}
-	void clearSound()		{ sounds.clear();																			soundIDs.clear();		}
+	void clearSoundBuffers()	{ soundBuffers.clear();																		soundBufferIDs.clear();	}
+	void clearSounds()		{ sounds.clear();																			soundIDs.clear();		}
 	void clearMusic()		
 	{ 
 		for (unsigned int i = 0; i < musicIDs.size();	i++) 
@@ -75,26 +75,26 @@ public:
 		music.clear();	
 		musicIDs.clear();		
 	} // fix music mem leak silly
-	void clearFont()		{ fonts.clear();																			fontIDs.clear();		}
-	void clearText()		{ texts.clear();																			textIDs.clear();		}
-	void clearTexture()		{ textures.clear();																			textureIDs.clear();		}
-	void clearCircle()		{ circles.clear();																			circleIDs.clear();		}
-	void clearRectangle()	{ rectangles.clear();																		rectangleIDs.clear();	}
-	void clearSprite()		{ sprites.clear();																			spriteIDs.clear();		}
+	void clearFonts()		{ fonts.clear();																			fontIDs.clear();		}
+	void clearTexts()		{ texts.clear();																			textIDs.clear();		}
+	void clearTextures()		{ textures.clear();																			textureIDs.clear();		}
+	void clearCircles()		{ circles.clear();																			circleIDs.clear();		}
+	void clearRectangles()	{ rectangles.clear();																		rectangleIDs.clear();	}
+	void clearSprites()		{ sprites.clear();																			spriteIDs.clear();		}
 
 public:
 
 	void clearAllResources()
 	{
-		clearSoundBuffer();
-		clearSound();
+		clearSoundBuffers();
+		clearSounds();
 		clearMusic();
-		clearFont();
-		clearText();
-		clearTexture();
-		clearCircle();
-		clearRectangle();
-		clearSprite();
+		clearFonts();
+		clearTexts();
+		clearTextures();
+		clearCircles();
+		clearRectangles();
+		clearSprites();
 	}
 
 public:

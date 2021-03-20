@@ -168,12 +168,13 @@
     <ClCompile Include="Includes\ImGui\imgui_draw.cpp" />
     <ClCompile Include="Includes\ImGui\imgui_tables.cpp" />
     <ClCompile Include="Includes\ImGui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Scenes\Common\SceneExampleSimple.cpp" />
+    <ClCompile Include="Source\Scenes\Common\SceneExampleBlank.cpp" />
     <ClCompile Include="Source\Physics\Collision.cpp" />
     <ClCompile Include="Source\Managers\FileManager.cpp" />
     <ClCompile Include="Source\Editor\Editor.cpp" />
     <ClCompile Include="Source\Managers\SceneManager.cpp" />
     <ClCompile Include="Source\Core\Animation.cpp" />
-    <ClCompile Include="Source\Scenes\Menus\SceneMainMenu.cpp" />
     <ClCompile Include="Source\Managers\DeltaManager.cpp" />
     <ClCompile Include="Source\Managers\EventManager.cpp" />
     <ClCompile Include="Source\Core\Engine.cpp" />
@@ -191,6 +192,8 @@
     <ClInclude Include="Includes\ImGui\imstb_rectpack.h" />
     <ClInclude Include="Includes\ImGui\imstb_textedit.h" />
     <ClInclude Include="Includes\ImGui\imstb_truetype.h" />
+    <ClInclude Include="Source\Scenes\Common\SceneExampleSimple.h" />
+    <ClInclude Include="Source\Scenes\Common\SceneExampleBlank.h" />
     <ClInclude Include="Source\Core\Sprite.h" />
     <ClInclude Include="Source\Physics\Collision.h" />
     <ClInclude Include="Source\Core\CircleShape.h" />
@@ -203,7 +206,6 @@
     <ClInclude Include="Source\Core\AspectRatioCalculator.h" />
     <ClInclude Include="Source\Core\ScaleCalculator.h" />
     <ClInclude Include="Source\Core\SceneList.h" />
-    <ClInclude Include="Source\Scenes\Menus\SceneMainMenu.h" />
     <ClInclude Include="Source\Core\Clock.h" />
     <ClInclude Include="Source\Core\Common.h" />
     <ClInclude Include="Source\Core\Font.h" />

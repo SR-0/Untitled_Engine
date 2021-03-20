@@ -54,13 +54,22 @@ void Engine::ExcuteActiveScene()
 	{
 		if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::CREATE)
 		{
+			// attach engine globals to SceneManager's active scene
+			AttachActiveSceneGlobals();
+
 			// create scene
 			SceneManager::GetActiveScene()->create();
+
+			// switch to setup
+			StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::SETUP);
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::SETUP)
 		{
 			// setup scene
 			SceneManager::GetActiveScene()->setup();
+
+			// switch to active loop (start update and render loop with GENERIC_SCENE_STATE::ACTIVE)
+			StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::ACTIVE);
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::ACTIVE)
 		{
@@ -81,17 +90,20 @@ void Engine::ExcuteActiveScene()
 		{
 			// destroy scene
 			SceneManager::GetActiveScene()->destroy();
+
+			// set scene to StateManager::GENERIC_SCENE_STATE::INACTIVE for transition
+			StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::INACTIVE);
 		}
 		else if (StateManager::GetGenericSceneState() == GENERIC_SCENE_STATE::INACTIVE)
 		{
-			// reset generic scene state for next scene processed
-			StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::CREATE);
-
 			// detach engine globals from current active scene
 			DetachActiveSceneGlobals();
 
 			// detach current active scene from SceneManager's active scene (sets it to nullptr)
 			SceneManager::DetachActiveScene();
+			
+			// reset generic scene state to "create stage" for next scene processed
+			StateManager::SetGenericSceneState(GENERIC_SCENE_STATE::CREATE);
 
 			// recursive
 			ExcuteActiveScene();
@@ -113,8 +125,11 @@ void Engine::ExcuteActiveScene()
 	}
 	else if (SceneManager::GetDefaultScene() != nullptr) // if there aren't any scenes queued
 	{
-		// attach the designated default scene (a loading screen atm)
+		// attach the designated default scene (a loading screen atm) to SceneManager's QueuedScene
 		SceneManager::AttachQueuedScene(*SceneManager::GetDefaultScene());
+
+		// recursive
+		ExcuteActiveScene();
 	}
 	else
 	{

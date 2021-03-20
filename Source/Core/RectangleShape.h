@@ -75,6 +75,11 @@ public:
 		sf::RectangleShape::setSize(sf::Vector2f(size));
 	}
 
+	void setSize(sf::Vector2u size)
+	{
+		sf::RectangleShape::setSize(sf::Vector2f(size));
+	}
+
 public:
 
 	sf::Uint8 getOpacity()

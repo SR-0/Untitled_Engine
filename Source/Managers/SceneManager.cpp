@@ -85,19 +85,19 @@ Scene* SceneManager::GetScene(unsigned int position)
 	return Scenes[position];
 }
 
-void SceneManager::PushBackScene(Scene* scene, const std::string& ID)
+void SceneManager::PushScene(Scene* scene, const std::string& ID)
 {
 	Scenes.push_back(scene);
 	SceneIDs.push_back(ID);
 }
 
-void SceneManager::PopBackScene()
+void SceneManager::PopScene()
 {
 	Scenes.pop_back();
 	SceneIDs.pop_back();
 }
 
-void SceneManager::Clear()
+void SceneManager::ClearScenes()
 {
 	for (unsigned int i = 0; i < Scenes.size(); i++)
 	{

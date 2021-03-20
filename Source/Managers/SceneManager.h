@@ -29,9 +29,9 @@ public:
 
 	static class Scene*	GetScene(const std::string& ID);
 	static class Scene*	GetScene(unsigned int position);
-	static void			PushBackScene(class Scene* scene, const std::string& ID);
-	static void			PopBackScene();
-	static void			Clear();
+	static void			PushScene(class Scene* scene, const std::string& ID);
+	static void			PopScene();
+	static void			ClearScenes();
 
 private:
 
